@@ -111,6 +111,8 @@ const Eth2CrawlerProvider = ({ children }: Eth2CrawlerContextProps) => {
   const [isLoadingNodeCountByCountries, setIsLoadingNodeCountByCountries] = useState(true)
   const [isLoadingAltAirPercentage, setIsLoadingAltAirPercentage] = useState(true)
 
+  const countryList = ['Argentina', 'Brazil', 'Mexico', 'Dominican Republic', 'Chile', 'El Salvador', 'Colombia', 'Venezuela']
+
   const getInitialData = async () => {
     graphClient
       .request<GetNodeStats>(LOAD_NODE_COUNTS, {
@@ -162,6 +164,7 @@ const Eth2CrawlerProvider = ({ children }: Eth2CrawlerContextProps) => {
     graphClient
       .request<GetHeatmap>(LOAD_HEATMAP)
       .then((result) => {
+
         setHeatmap(result.getHeatmapData)
       })
       .catch(console.error)
@@ -176,6 +179,7 @@ const Eth2CrawlerProvider = ({ children }: Eth2CrawlerContextProps) => {
     graphClient
       .request<GetNodesByCountries>(LOAD_NODES_BY_COUNTRIES)
       .then((result) => {
+        result.aggregateByCountry = result.aggregateByCountry.filter((obj) => countryList.includes(obj.name))
         setNodeCountByCountries(result.aggregateByCountry)
       })
       .catch(console.error)
